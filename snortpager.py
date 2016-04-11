@@ -38,8 +38,8 @@ def parse_alert_fast(line):
     else:
         return None
     
-def send_alert(alert, alert_id):
-    pager.create_event(args.apikey, alert_id, 'Snort Alert', alert)
+def send_alert(alert):
+    pager.create_event(args.apikey, 'Snort Alert', 'Snort Alert', alert)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Snort-PagerDuty connector')
@@ -60,15 +60,15 @@ if __name__ == '__main__':
         while not alert_format.search(line):
             line = stdout.readline()
         while True:
-            alert = parse_alert_full2(stdout, line)
+            alert = parse_alert_full(stdout, line)
             if alert:
-                print alert
+                send_alert(alert)
             line = stdout.readline()
     elif args.alert_fast:
         line = stdout.readline()
         while True:
             alert = parse_alert_fast(line)
             if alert:
-                print alert
+                send_alert(alert)
             line =  stdout.readline()
             
